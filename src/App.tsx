@@ -13,7 +13,7 @@ function App() {
 
 	return (
 		<>
-			<MaimButton onClick={() => increment()}>Button</MaimButton>;
+			<MaimButton onClick={() => increment()}>Button</MaimButton>
 			<div>{counter}</div>
 		</>
 	);
