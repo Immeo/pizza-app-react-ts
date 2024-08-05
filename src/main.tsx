@@ -10,12 +10,18 @@ import Menu from './pages/Menu/Menu.tsx';
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <Menu />
+		children: [
+			{
+				index: true,
+				element: <Menu />
+			},
+			{
+				path: 'cart',
+				element: <Cart />
+			}
+		]
 	},
-	{
-		path: '/cart',
-		element: <Cart />
-	},
+
 	{
 		path: '*',
 		element: <Error />
