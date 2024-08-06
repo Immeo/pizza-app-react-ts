@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.tsx';
 import './index.css';
+import Layout from './layout/Layout/Layout.tsx';
 import Cart from './pages/Cart/Cart.tsx';
 import Error from './pages/Error/Error.tsx';
 import Menu from './pages/Menu/Menu.tsx';
@@ -10,6 +11,7 @@ import Menu from './pages/Menu/Menu.tsx';
 const router = createBrowserRouter([
 	{
 		path: '/',
+		element: <Layout />,
 		children: [
 			{
 				index: true,
