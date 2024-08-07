@@ -1,8 +1,15 @@
-import { Link, Outlet } from 'react-router-dom';
+import cn from 'classnames';
+import { useEffect } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import MaimButton from '../../components/MainButton/MainButton';
 import styles from './Layout.module.css';
 
 function Layout() {
+	const location = useLocation();
+	useEffect(() => {
+		console.log(location);
+	}, [location]);
+
 	return (
 		<div className={styles['layout']}>
 			<div className={styles['sidebar']}>
@@ -16,7 +23,12 @@ function Layout() {
 					<div className={styles['email']}>john@example.com</div>
 				</div>
 				<div className={styles['menu']}>
-					<Link to='/' className={styles['link']}>
+					<Link
+						to='/'
+						className={cn(styles['link'], {
+							[styles['active']]: location.pathname === '/'
+						})}
+					>
 						<img src='/menusIcon.svg' alt='Icon menu' />
 						Меню
 					</Link>
