@@ -1,15 +1,9 @@
 import cn from 'classnames';
-import { useEffect } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import MaimButton from '../../components/MainButton/MainButton';
 import styles from './Layout.module.css';
 
 function Layout() {
-	const location = useLocation();
-	useEffect(() => {
-		console.log(location);
-	}, [location]);
-
 	return (
 		<div className={styles['layout']}>
 			<div className={styles['sidebar']}>
@@ -23,19 +17,28 @@ function Layout() {
 					<div className={styles['email']}>john@example.com</div>
 				</div>
 				<div className={styles['menu']}>
-					<Link
+					<NavLink
 						to='/'
-						className={cn(styles['link'], {
-							[styles['active']]: location.pathname === '/'
-						})}
+						className={({ isActive }) => {
+							return cn(styles['link'], {
+								[styles['active']]: isActive
+							});
+						}}
 					>
 						<img src='/menusIcon.svg' alt='Icon menu' />
-						Меню
-					</Link>
-					<Link to='/cart' className={styles['link']}>
+						Menu
+					</NavLink>
+					<NavLink
+						to='/cart'
+						className={({ isActive }) => {
+							return cn(styles['link'], {
+								[styles['active']]: isActive
+							});
+						}}
+					>
 						<img src='/cartIcon.svg' alt='Icon cart' />
 						Cart
-					</Link>
+					</NavLink>
 				</div>
 				<MaimButton className={styles['exit']}>
 					<img src='/exitIcon.svg' alt='Icon exit' />
