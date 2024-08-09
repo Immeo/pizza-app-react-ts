@@ -45,7 +45,7 @@ function Layout() {
 					Exit
 				</MaimButton>
 			</div>
-			<div>
+			<div className={styles['content']}>
 				<Outlet />
 			</div>
 		</div>

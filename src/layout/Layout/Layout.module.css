@@ -65,3 +65,8 @@
 	line-height: normal;
 	color: #9ea1b1;
 }
+
+.content {
+	width: 100%;
+	padding: 40px 60px;
+}
