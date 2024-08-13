@@ -9,13 +9,18 @@ import styles from './Menu.module.css';
 
 function Menu() {
 	const [product, setProduct] = useState<Product[]>([]);
+	const [isLoading, setIisLoading] = useState<boolean>(false);
 
 	const getMenu = async () => {
 		try {
+			setIisLoading(true);
+			await new Promise(resolve => setTimeout(resolve, 2000));
 			const { data } = await axios.get<Product[]>(`${PREFIX}/products`);
 			setProduct(data);
+			setIisLoading(false);
 		} catch (error) {
 			console.log(error);
+			setIisLoading(false);
 			return;
 		}
 	};
@@ -31,18 +36,20 @@ function Menu() {
 				<Search placeholder='Enter the dish or composition' />
 			</div>
 			<div>
-				{product.map(item => (
-					<ProductCard
-						key={item.id}
-						id={item.id}
-						name={item.name}
-						price={item.price}
-						description={item.ingredients.join(', ')}
-						image={item.image}
-						rating={item.rating}
-					/>
-				))}
+				{!isLoading &&
+					product.map(item => (
+						<ProductCard
+							key={item.id}
+							id={item.id}
+							name={item.name}
+							price={item.price}
+							description={item.ingredients.join(', ')}
+							image={item.image}
+							rating={item.rating}
+						/>
+					))}
 			</div>
+			{isLoading && <h2>Загрузка...</h2>}
 		</>
 	);
 }
