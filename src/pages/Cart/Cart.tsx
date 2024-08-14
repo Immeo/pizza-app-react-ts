@@ -1,7 +1,7 @@
 function Cart() {
 	return (
 		<div>
-			<p>cart</p>
+			<p>Корзина</p>
 		</div>
 	);
 }

@@ -4,10 +4,13 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, defer, RouterProvider } from 'react-router-dom';
 import { PREFIX } from './helpers/API.ts';
 import './index.css';
+import AuthLayout from './layout/Auth/AuthLayout.tsx';
 import Layout from './layout/Layout/Layout.tsx';
 import Cart from './pages/Cart/Cart.tsx';
 import Error from './pages/Error/Error.tsx';
+import { Login } from './pages/Login/Login.tsx';
 import { ProductDetail } from './pages/Product/ProductDetail.tsx';
+import { Register } from './pages/Register/Register.tsx';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
 
@@ -47,6 +50,21 @@ const router = createBrowserRouter([
 					// const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
 					// return data;
 				}
+			}
+		]
+	},
+	{
+		path: '/auth',
+		element: <AuthLayout />,
+
+		children: [
+			{
+				path: 'login',
+				element: <Login />
+			},
+			{
+				path: 'register',
+				element: <Register />
 			}
 		]
 	},
