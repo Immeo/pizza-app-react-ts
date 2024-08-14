@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, defer, RouterProvider } from 'react-router-dom';
 import { PREFIX } from './helpers/API.ts';
 import './index.css';
 import Layout from './layout/Layout/Layout.tsx';
@@ -33,9 +33,19 @@ const router = createBrowserRouter([
 				element: <ProductDetail />,
 				errorElement: <Error />,
 				loader: async ({ params }) => {
-					await new Promise<void>(resolve => setTimeout(resolve, 1000));
-					const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
-					return data;
+					return defer({
+						data: new Promise((resolve, reject) => {
+							setTimeout(() => {
+								axios
+									.get(`${PREFIX}/products/${params.id}`)
+									.then(({ data }) => resolve(data))
+									.catch(reject);
+							}, 1000);
+						})
+					});
+					// await new Promise<void>(resolve => setTimeout(resolve, 1000));
+					// const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
+					// return data;
 				}
 			}
 		]
