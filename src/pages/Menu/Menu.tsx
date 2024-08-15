@@ -36,8 +36,8 @@ function Menu() {
 	return (
 		<>
 			<div className={styles['head']}>
-				<Headling>Menu</Headling>
-				<Search placeholder='Enter the dish or composition' />
+				<Headling>Меню</Headling>
+				<Search placeholder='Введите блюдо или состав' />
 			</div>
 			<div>
 				{error && <h2>{error}</h2>}

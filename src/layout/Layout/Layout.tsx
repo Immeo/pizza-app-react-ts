@@ -26,7 +26,7 @@ function Layout() {
 						}}
 					>
 						<img src='/menusIcon.svg' alt='Icon menu' />
-						Menu
+						Меню
 					</NavLink>
 					<NavLink
 						to='/cart'
@@ -37,12 +37,12 @@ function Layout() {
 						}}
 					>
 						<img src='/cartIcon.svg' alt='Icon cart' />
-						Cart
+						Корзина
 					</NavLink>
 				</div>
 				<MaimButton className={styles['exit']}>
 					<img src='/exitIcon.svg' alt='Icon exit' />
-					Exit
+					Выход
 				</MaimButton>
 			</div>
 			<div className={styles['content']}>

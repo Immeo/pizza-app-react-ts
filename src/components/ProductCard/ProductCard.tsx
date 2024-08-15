@@ -3,12 +3,6 @@ import styles from './ProductCard.module.css';
 import { ProductCardProps } from './ProductCard.props';
 
 function ProductCard(props: ProductCardProps) {
-	const priceToUSDFormat = new Intl.NumberFormat('en-US', {
-		style: 'currency',
-		currency: 'USD'
-	}).format(props.price);
-	const trueFormat = priceToUSDFormat.slice(1);
-
 	return (
 		<Link to={`/product/${props.id}`} className={styles['link']}>
 			<div className={styles['card']}>
@@ -17,8 +11,8 @@ function ProductCard(props: ProductCardProps) {
 					style={{ backgroundImage: `url(${props.image})` }}
 				>
 					<div className={styles['price']}>
-						<span className={styles['currency']}>$</span>
-						{trueFormat}
+						{props.price}
+						<span className={styles['currency']}>₽</span>
 					</div>
 					<button type='button' className={styles['add-to-cart']}>
 						<img src='/cartBtn.svg' alt='Add to cart' />
