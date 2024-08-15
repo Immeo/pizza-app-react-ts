@@ -3,6 +3,7 @@ import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, defer, RouterProvider } from 'react-router-dom';
 import { PREFIX } from './helpers/API.ts';
+import { RequirreAuth } from './helpers/RequireAuth.tsx';
 import './index.css';
 import AuthLayout from './layout/Auth/AuthLayout.tsx';
 import Layout from './layout/Layout/Layout.tsx';
@@ -17,7 +18,11 @@ const Menu = lazy(() => import('./pages/Menu/Menu'));
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <Layout />,
+		element: (
+			<RequirreAuth>
+				<Layout />
+			</RequirreAuth>
+		),
 		children: [
 			{
 				path: '/',
