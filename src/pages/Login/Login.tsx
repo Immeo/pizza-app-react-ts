@@ -19,6 +19,7 @@ export type LoginForm = {
 
 export function Login() {
 	const [error, setError] = useState<string | null>();
+	// если данные верные и токен не просрочен то перенапряем пользовителя
 	const navigate = useNavigate();
 
 	const submit = async (e: FormEvent) => {

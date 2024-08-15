@@ -1,9 +1,16 @@
 import cn from 'classnames';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import MaimButton from '../../components/MainButton/MainButton';
 import styles from './Layout.module.css';
 
 function Layout() {
+	const navigate = useNavigate();
+
+	const logout = () => {
+		localStorage.removeItem('jwt');
+		navigate('/auth/login');
+	};
+
 	return (
 		<div className={styles['layout']}>
 			<div className={styles['sidebar']}>
@@ -40,7 +47,7 @@ function Layout() {
 						Корзина
 					</NavLink>
 				</div>
-				<MaimButton className={styles['exit']}>
+				<MaimButton className={styles['exit']} onClick={logout}>
 					<img src='/exitIcon.svg' alt='Icon exit' />
 					Выход
 				</MaimButton>
