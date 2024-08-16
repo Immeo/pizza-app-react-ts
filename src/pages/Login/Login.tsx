@@ -1,11 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import { FormEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Headling from '../../components/Headling/Headling';
 import Input from '../../components/InputForm/Input';
 import MaimButton from '../../components/MainButton/MainButton';
 import { PREFIX } from '../../helpers/API';
 import { LoginResponse } from '../../interfaces/auth.interface';
+import { AppDispatch } from '../../store/store';
+import { userAction } from '../../store/user.slice';
 import styles from './Login.module.css';
 
 export type LoginForm = {
@@ -21,6 +24,7 @@ export function Login() {
 	const [error, setError] = useState<string | null>();
 	// если данные верные и токен не просрочен то перенапряем пользовителя
 	const navigate = useNavigate();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -37,6 +41,7 @@ export function Login() {
 				password
 			});
 			localStorage.setItem('jwt', data.access_token);
+			dispatch(userAction.addJwt(data.access_token));
 			navigate('/');
 		} catch (e) {
 			if (e instanceof AxiosError) {
