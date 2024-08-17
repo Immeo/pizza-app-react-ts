@@ -1,14 +1,20 @@
 import cn from 'classnames';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import MaimButton from '../../components/MainButton/MainButton';
-import { AppDispatch } from '../../store/store';
-import { userActions } from '../../store/user.slice';
+import { AppDispatch, RootState } from '../../store/store';
+import { getProfile, userActions } from '../../store/user.slice';
 import styles from './Layout.module.css';
 
 function Layout() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
+	const profile = useSelector((state: RootState) => state.user.profile);
+
+	useEffect(() => {
+		dispatch(getProfile());
+	}, [dispatch]);
 
 	const logout = () => {
 		dispatch(userActions.logout());
@@ -24,8 +30,12 @@ function Layout() {
 						src='/avatar.png'
 						alt='Avatar user'
 					/>
-					<div className={styles['name']}>John Doe</div>
-					<div className={styles['email']}>john@example.com</div>
+					<div className={styles['name']}>
+						{profile?.name ? profile.name : 'Имя'}
+					</div>
+					<div className={styles['email']}>
+						{profile?.email ? profile.email : 'email@example.com'}
+					</div>
 				</div>
 				<div className={styles['menu']}>
 					<NavLink
