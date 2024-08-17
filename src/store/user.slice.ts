@@ -1,32 +1,53 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { PREFIX } from '../helpers/API';
+import { LoginResponse } from '../interfaces/auth.interface';
 import { loadState } from './storage';
 
 export const JWT_PERSISTENT_STATE = 'userData';
 
-export interface UserPersistenState {
+export interface UserPersistentState {
 	jwt: string | null;
 }
 
 export interface UserState {
 	jwt: string | null;
+	loginState: null | 'rejectt';
 }
 
 const initialState: UserState = {
-	jwt: loadState<UserPersistenState>(JWT_PERSISTENT_STATE)?.jwt ?? null
+	jwt: loadState<UserPersistentState>(JWT_PERSISTENT_STATE)?.jwt ?? null,
+	loginState: null
 };
+
+export const login = createAsyncThunk(
+	'user/login',
+	async (params: { email: string; password: string }) => {
+		const { data } = await axios.post<LoginResponse>(`${PREFIX}/auth/login`, {
+			email: params.email,
+			password: params.password
+		});
+		return data;
+	}
+);
 
 export const userSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
-		addJwt: (state, action: PayloadAction<string>) => {
-			state.jwt = action.payload;
-		},
-		removeJwt: state => {
+		logout: state => {
 			state.jwt = null;
 		}
+	},
+	extraReducers: builder => {
+		builder.addCase(
+			login.fulfilled,
+			(state, action: PayloadAction<LoginResponse>) => {
+				state.jwt = action.payload.access_token;
+			}
+		);
 	}
 });
 
 export default userSlice.reducer;
-export const userAction = userSlice.actions;
+export const userActions = userSlice.actions;

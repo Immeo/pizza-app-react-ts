@@ -1,14 +1,11 @@
-import axios, { AxiosError } from 'axios';
-import { FormEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { FormEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Headling from '../../components/Headling/Headling';
 import Input from '../../components/InputForm/Input';
 import MaimButton from '../../components/MainButton/MainButton';
-import { PREFIX } from '../../helpers/API';
-import { LoginResponse } from '../../interfaces/auth.interface';
-import { AppDispatch } from '../../store/store';
-import { userAction } from '../../store/user.slice';
+import { AppDispatch, RootState } from '../../store/store';
+import { login } from '../../store/user.slice';
 import styles from './Login.module.css';
 
 export type LoginForm = {
@@ -25,6 +22,13 @@ export function Login() {
 	// если данные верные и токен не просрочен то перенапряем пользовителя
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
+	const jwt = useSelector((s: RootState) => s.user.jwt);
+
+	useEffect(() => {
+		if (jwt) {
+			navigate('/');
+		}
+	}, [jwt, navigate]);
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -35,18 +39,19 @@ export function Login() {
 	};
 
 	const sendLogin = async (email: string, password: string) => {
-		try {
-			const { data } = await axios.post<LoginResponse>(`${PREFIX}/auth/login`, {
-				email,
-				password
-			});
-			dispatch(userAction.addJwt(data.access_token));
-			navigate('/');
-		} catch (e) {
-			if (e instanceof AxiosError) {
-				setError(e.response?.data.message);
-			}
-		}
+		dispatch(login({ email, password }));
+		// try {
+		// 	const { data } = await axios.post<LoginResponse>(`${PREFIX}/auth/login`, {
+		// 		email,
+		// 		password
+		// 	});
+		// 	dispatch(userAction.addJwt(data.access_token));
+		// 	navigate('/');
+		// } catch (e) {
+		// 	if (e instanceof AxiosError) {
+		// 		setError(e.response?.data.message);
+		// 	}
+		// }
 	};
 
 	return (
