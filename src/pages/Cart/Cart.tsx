@@ -6,6 +6,7 @@ import Layout from '../../components/Headling/Headling';
 import { PREFIX } from '../../helpers/API';
 import { Product } from '../../interfaces/product.interface';
 import { RootState } from '../../store/store';
+import styles from './Cart.module.css';
 
 function Cart() {
 	const [cartProduct, setCartProduct] = useState<Product[]>([]);
@@ -27,13 +28,13 @@ function Cart() {
 
 	return (
 		<>
-			<Layout>Корзина</Layout>
+			<Layout className={styles['headling']}>Корзина</Layout>
 			{items.map(i => {
 				const product = cartProduct.find(p => p.id === i.id);
 				if (!product) {
 					return;
 				}
-				return <CartItem count={i.count} {...product} />;
+				return <CartItem key={product.id} count={i.count} {...product} />;
 			})}
 		</>
 	);
