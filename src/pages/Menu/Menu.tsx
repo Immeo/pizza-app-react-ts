@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Headling from '../../components/Headling/Headling';
 import Search from '../../components/Search/Search';
 import { PREFIX } from '../../helpers/API';
@@ -11,12 +11,21 @@ function Menu() {
 	const [product, setProduct] = useState<Product[]>([]);
 	const [isLoading, setIisLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | undefined>(undefined);
+	const [searchValue, setSearchValue] = useState<string>('');
 
-	const getMenu = async () => {
+	useEffect(() => {
+		getMenu(searchValue);
+	}, [searchValue]);
+
+	const getMenu = async (name?: string) => {
 		try {
 			setIisLoading(true);
 			await new Promise(resolve => setTimeout(resolve, 2000));
-			const { data } = await axios.get<Product[]>(`${PREFIX}/products`);
+			const { data } = await axios.get<Product[]>(`${PREFIX}/products`, {
+				params: {
+					name
+				}
+			});
 			setProduct(data);
 			setIisLoading(false);
 		} catch (e) {
@@ -29,21 +38,26 @@ function Menu() {
 		}
 	};
 
-	useEffect(() => {
-		getMenu();
-	}, []);
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+		setSearchValue(event.target.value);
+	};
 
 	return (
 		<>
 			<div className={styles['head']}>
 				<Headling>Меню</Headling>
-				<Search placeholder='Введите блюдо или состав' />
+				<Search
+					placeholder='Введите блюдо или состав'
+					onChange={handleChange}
+					value={searchValue}
+				/>
 			</div>
 			<div>
 				{error && <h2>{error}</h2>}
-				{!isLoading && <MenuList products={product} />}
+				{!isLoading && product.length > 0 && <MenuList products={product} />}
 			</div>
 			{isLoading && <h2>Загрузка...</h2>}
+			{!isLoading && product.length === 0 && <h2>Ничего не найдено</h2>}
 		</>
 	);
 }
