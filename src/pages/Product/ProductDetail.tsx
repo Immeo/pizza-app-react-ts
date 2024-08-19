@@ -9,7 +9,7 @@ export function ProductDetail() {
 		<>
 			<Suspense fallback={'Загружаю...'}>
 				<Await resolve={data.data}>
-					{({ data }: { data: Product }) => <>Product - {data.name}</>}
+					{({ data }: { data: Product }) => <>Product - {data}</>}
 				</Await>
 			</Suspense>
 		</>
