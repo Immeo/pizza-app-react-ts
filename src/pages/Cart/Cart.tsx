@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CartItem from '../../components/CartItem/CartItem';
 import Layout from '../../components/Headling/Headling';
+import MaimButton from '../../components/MainButton/MainButton';
 import { PREFIX } from '../../helpers/API';
 import { Product } from '../../interfaces/product.interface';
-import { RootState } from '../../store/store';
+import { cartActions } from '../../store/cart.slice';
+import { AppDispatch, RootState } from '../../store/store';
 import styles from './Cart.module.css';
 
 const DELIVERY_FEE = 169;
@@ -13,6 +16,9 @@ const DELIVERY_FEE = 169;
 function Cart() {
 	const [cartProduct, setCartProduct] = useState<Product[]>([]);
 	const items = useSelector((state: RootState) => state.cart.items);
+	const dispatch = useDispatch<AppDispatch>();
+	const jwt = useSelector((state: RootState) => state.user.jwt);
+	const navigate = useNavigate();
 
 	const totalSum = items
 		.map(i => {
@@ -32,6 +38,22 @@ function Cart() {
 	const loadAll = async () => {
 		const res = await Promise.all(items.map(i => getItem(i.id)));
 		setCartProduct(res);
+	};
+
+	const checkout = async () => {
+		await axios.post(
+			`${PREFIX}/order`,
+			{
+				product: items
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${jwt}`
+				}
+			}
+		);
+		dispatch(cartActions.clean());
+		navigate('/success');
 	};
 
 	useEffect(() => {
@@ -63,10 +85,17 @@ function Cart() {
 			</div>
 			<hr className={styles['hr']} />
 			<div className={styles['line']}>
-				<div className={styles['text']}>Итог {items.length}</div>
+				<div className={styles['text']}>
+					Итог <span className={styles['total-count']}>({items.length})</span>
+				</div>
 				<div className={styles['price']}>
 					{totalSum + DELIVERY_FEE}&nbsp;<span>₽</span>
 				</div>
+			</div>
+			<div className={styles['checkout']}>
+				<MaimButton appearence='big' onClick={checkout}>
+					Оформить заказ
+				</MaimButton>
 			</div>
 		</>
 	);
